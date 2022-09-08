@@ -7,7 +7,7 @@ from geopy.geocoders import Nominatim
 geolocator = Nominatim(user_agent="pothole")
 location = geolocator.reverse(f'{g.latlng[0]}, {g.latlng[1]}')
 print(location.address)
-#cap = cv2.VideoCapture('rtsp://admin:vhhv837sm4V123!@192.168.1.103:554/profile2/media.smp')
+#cap = cv2.VideoCapture('')
 
 while True:
 
