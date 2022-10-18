@@ -1,6 +1,7 @@
 import math
 import os
 import time
+import logging
 
 import cv2
 import numpy as np
@@ -11,6 +12,11 @@ torch.set_printoptions(linewidth=320, precision=5, profile='long')
 np.set_printoptions(linewidth=320, formatter={'float_kind': '{:11.5g}'.format})
 cv2.setNumThreads(0)
 os.environ['NUMEXPR_MAX_THREADS'] = str(min(os.cpu_count(), 8))
+
+def set_logging(rank=-1):
+    logging.basicConfig(
+        format="%(message)s",
+        level=logging.INFO if rank in [-1, 0] else logging.WARN)
 
 def check_img_size(img_size, s=32):
 

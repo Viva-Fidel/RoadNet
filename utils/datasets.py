@@ -1,4 +1,5 @@
 import cv2
+import time
 import numpy as np
 
 class LoadWebcam:
@@ -9,6 +10,8 @@ class LoadWebcam:
         self.pipe = pipe
         self.cap = cv2.VideoCapture(pipe)
         self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)
+        self.fps = self.cap.get(cv2.CAP_PROP_FPS)
+        print(self.fps)
         self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
@@ -25,6 +28,7 @@ class LoadWebcam:
 
         if self.pipe == 0:
             ret_val, img0 = self.cap.read()
+            time.sleep(1 / self.fps)
             img0 = cv2.flip(img0, 1)
         else:
             n = 0
@@ -38,7 +42,7 @@ class LoadWebcam:
 
         assert ret_val, f'Camera Error {self.pipe}'
         img_path = 'webcam.jpg'
-        print(f'webcam {self.count}: ', end='')
+        #print(f'webcam {self.count}: ', end='')
 
         img = letterbox(img0, self.img_size, stride=self.stride)[0]
 
