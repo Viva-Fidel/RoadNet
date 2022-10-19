@@ -1,7 +1,7 @@
 import cv2
 import os
 import torch
-import time
+
 import torch.backends.cudnn as cudnn
 from datetime import datetime
 from numpy import random
@@ -32,7 +32,7 @@ class Detection:
         self.source = 'test3.mp4'
         self.result = cv2.VideoWriter(f'{current_day}/{current_time}.avi',
                                       cv2.VideoWriter_fourcc(*'MJPG'),
-                                      25, (1280, 720))
+                                      1, (1280, 720))
 
     def detect(self):
         set_logging()
@@ -62,20 +62,13 @@ class Detection:
         old_img_w = old_img_h = imgsz
         old_img_b = 1
 
-        for path, img, im0s, vid_cap in dataset:
+        for img, im0s in dataset:
             img = torch.from_numpy(img).to(device)
             img = img.half() if half else img.float()
             img /= 255.0
             if img.ndimension() == 3:
                 img = img.unsqueeze(0)
 
-            if device.type != 'cpu' and (
-                    old_img_b != img.shape[0] or old_img_h != img.shape[2] or old_img_w != img.shape[3]):
-                old_img_b = img.shape[0]
-                old_img_h = img.shape[2]
-                old_img_w = img.shape[3]
-                for i in range(3):
-                    model(img)[0]
 
             t1 = time_synchronized()
             with torch.no_grad():  # Calculating gradients would cause a GPU memory leak
@@ -87,7 +80,7 @@ class Detection:
 
             for i, det in enumerate(pred):
 
-                p, s, im0, frame = path[i], '%g: ' % i, im0s[i].copy(), dataset.count
+                s, im0, frame = '%g: ' % i, im0s[i].copy(), dataset.count
 
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0s.shape).round()
 
@@ -102,12 +95,11 @@ class Detection:
                     print(f'{s}Done. ({(1E3 * (t2 - t1)):.1f}ms) Inference, ({(1E3 * (t3 - t2)):.1f}ms) NMS')
                     try:
                         time_now = datetime.now().strftime("%H.%M.%S")
-                        os.mkdir(f'{current_day}/{time_now}')
-                        with open(f'{current_day}/{time_now}/coordinates.txt', 'w') as f:
+                        with open(f'{current_day}/{time_now}.txt', 'w') as f:
                             address_data = Gps.check_gps()
                             f.write(str(address_data))
                             f.close()
-                        cv2.imwrite(f'{current_day}/{time_now}/{time_now}.jpg', im0s)
+                        cv2.imwrite(f'{current_day}/{time_now}.jpg', im0s)
                     except:
                         pass
                 cv2.imshow('Test', im0s)
