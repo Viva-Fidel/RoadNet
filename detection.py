@@ -24,9 +24,13 @@ except:
 print(torch.cuda.is_available())
 
 class Detection:
+    '''The programme detects 4 types of road damage: Pothole, Aligator crack, Transverse crack,
+    Longitudinal crack using pretrained Yolov7 weights
+    Author: Aleksei Artamonov
+    https://github.com/Viva-Fidel'''
+
     def __init__(self):
-        # Press Q to quit video
-        # Write direction to your pt weights
+        # Press 'q' to quit video
         self.weights = 'best.pt'
         # Write direction to your video
         self.source = 'test3.mp4'
@@ -48,7 +52,7 @@ class Detection:
         imgsz = check_img_size(640, s=stride)
 
         if half:
-            model.half()  # to FP16
+            model.half()
 
         cudnn.benchmark = True
         dataset = LoadWebcam(self.source, img_size=imgsz, stride=stride)
@@ -59,9 +63,6 @@ class Detection:
         if device.type != 'cpu':
             model(torch.zeros(1, 3, imgsz, imgsz).to(device).type_as(next(model.parameters())))
 
-        old_img_w = old_img_h = imgsz
-        old_img_b = 1
-
         for img, im0s in dataset:
             img = torch.from_numpy(img).to(device)
             img = img.half() if half else img.float()
@@ -71,7 +72,7 @@ class Detection:
 
 
             t1 = time_synchronized()
-            with torch.no_grad():  # Calculating gradients would cause a GPU memory leak
+            with torch.no_grad():
                 pred = model(img)[0]
             t2 = time_synchronized()
 

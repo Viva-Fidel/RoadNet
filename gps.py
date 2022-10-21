@@ -5,6 +5,7 @@ from geopy.geocoders import Nominatim
 geolocator = Nominatim(user_agent="Rodatec")
 
 class Gps:
+    @staticmethod
     def check_gps():
         try:
             gps = serial.Serial('com4', baudrate=9600)
@@ -43,7 +44,7 @@ class Gps:
                     long_mmm = str(long_mmm).strip('.0')[:8]
                     longitude = longitude_degrees + '.' + long_mmm
 
-                    location = geolocator.reverse(latitude, longitude)
+                    location = geolocator.reverse(f'{str(latitude)}, {str(longitude)}')
 
                     return latitude, longitude, location.address
 
