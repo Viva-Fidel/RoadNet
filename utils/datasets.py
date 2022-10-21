@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from imutils.video import FileVideoStream
 
 class LoadWebcam:
     def __init__(self, pipe='0', img_size=640, stride=32):
@@ -8,13 +7,12 @@ class LoadWebcam:
         self.stride = stride
 
         self.pipe = pipe
-        #self.cap = cv2.VideoCapture(pipe)
-        self.cap = FileVideoStream(pipe).start()
-        #self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)
-        #self.fps = self.cap.get(cv2.CAP_PROP_FPS)
-        #print(self.fps)
-        #self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        #self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        self.cap = cv2.VideoCapture(pipe)
+        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)
+        self.fps = self.cap.get(cv2.CAP_PROP_FPS)
+        print(self.fps)
+        self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     def __iter__(self):
         self.count = -1
@@ -22,8 +20,8 @@ class LoadWebcam:
 
     def __next__(self):
         self.count += 1
-        #self.cap.grab()
-        img0 = self.cap.read()
+        self.cap.grab()
+        ret_val, img0 = self.cap.read()
 
         if cv2.waitKey(1) == ord('q'):
             self.cap.release()
