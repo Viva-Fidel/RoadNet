@@ -2,10 +2,6 @@
 ## Introduction
 The programme detects 4 types of road damage: Pothole, Aligator crack, Transverse crack, Longitudinal crack using pretrained [Yolov7](https://github.com/WongKinYiu/yolov7) weights
 
-## Table of contents
-
-## Introduction
-
 ## Installing
 
 >!git clone https://github.com/Viva-Fidel/Yolov7-with-pytorch-weights.git
