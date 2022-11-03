@@ -96,10 +96,10 @@ class Detection:
                     print(f'{s}Done. ({(1E3 * (t2 - t1)):.1f}ms) Inference, ({(1E3 * (t3 - t2)):.1f}ms) NMS')
                     try:
                         time_now = datetime.now().strftime("%H.%M.%S")
-                        with open(f'{current_day}/{time_now}.txt', 'w') as f:
-                            address_data = Gps.check_gps()
-                            f.write(str(address_data))
-                            f.close()
+                        f = open(f'{current_day}/{time_now}.txt', 'x')
+                        address_data = Gps.check_gps()
+                        f.write(str(address_data))
+                        f.close()
                         cv2.imwrite(f'{current_day}/{time_now}.jpg', im0s)
                     except:
                         pass
